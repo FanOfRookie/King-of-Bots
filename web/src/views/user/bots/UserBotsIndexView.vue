@@ -1,11 +1,16 @@
 <template>
-<div>
-    用户Bots
-</div>
-</template>
-    
-<script>
-</script>
-    
+    <ContentView>
+        用户Bots
+    </ContentView>
+    </template>
+        
+    <script>
+    import ContentView from "@/components/ContentView.vue";
+    export default{
+        components:{
+            ContentView
+        }
+    }
+    </script>
 <style scoped>
 </style>

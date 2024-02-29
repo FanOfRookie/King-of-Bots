@@ -8,13 +8,13 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <router-link class="nav-link" :to="{name:'pk_index'}">对战</router-link>
+          <router-link :class="route_name=='pk_index'? 'nav-link active' :'nav-link' " :to="{name:'pk_index'}">对战</router-link>
         </li>
         <li class="nav-item">
-            <router-link class="nav-link" :to="{name:'record_index'}">对局记录</router-link>
+            <router-link :class="route_name=='record_index'? 'nav-link active' :'nav-link' " :to="{name:'record_index'}">对局记录</router-link>
         </li>
         <li class="nav-item">
-            <router-link class="nav-link" :to="{name:'ranklist_index'}">排行榜</router-link>
+            <router-link :class="route_name=='ranklist_index'? 'nav-link active' :'nav-link' " :to="{name:'ranklist_index'}">排行榜</router-link>
         </li>
       </ul>
       <ul class="navbar-nav ms-md-auto">
@@ -38,6 +38,17 @@
 </template>
 
 <script>
+import { useRoute } from 'vue-router';
+import { computed } from 'vue';
+export default{
+  setup(){
+    const route=useRoute();
+    //Computed可以被实时调用的抽象函数
+    let route_name=computed(()=>route.name)
+    return {route_name}
+    
+  }
+}
 </script>
 
 <style scoped>
