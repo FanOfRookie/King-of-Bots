@@ -3,9 +3,10 @@ import { Wall } from "./wall";
 import { Snake } from "./Snake";
 
 export class GameMap extends AcGameObject{
-    constructor(ctx, parent){   //ctx 画布
+    constructor(ctx, parent, store){   //ctx 画布
         super()
         
+        this.store = store
         this.ctx=ctx
         this.parent=parent
         this.L=0
@@ -15,7 +16,7 @@ export class GameMap extends AcGameObject{
 
         this.innerWallNum=40
         this.Walls=[]
-        this.g=[]
+        this.g=null
 
         this.Snakes=[
             new Snake({id:0,color:'blue',r:this.rows-2,c:1},this),
@@ -23,63 +24,8 @@ export class GameMap extends AcGameObject{
         ]
     }
 
-    checkGraphConnectivity(g,sx,sy,tx,ty){
-        if(sx==tx&&sy==ty)
-            return true
-        //将源点设为已遍历
-        g[sx][sy]=true
-
-        //对应四个方向
-        let dx=[-1,0,1,0]
-        let dy=[0,1,0,-1]
-
-        for(let i=0;i<4;i++){
-            let x=sx+dx[i]
-            let y=sy+dy[i]
-
-            //
-            if(!g[x][y] && this.checkGraphConnectivity(g,x,y,tx,ty))
-                return true
-        }
-        return false
-    }
-
-    createWall(){
-        for(let r=0;r<this.rows;r++)
-        {
-            this.g[r]=[]
-            for(let c=0;c<this.cols;c++)
-                this.g[r][c]=false
-        }
-
-        for(let r=0;r<this.rows;r++)
-            this.g[r][0]=this.g[r][this.cols-1]=true
-        for(let c=0;c<this.cols;c++)
-            this.g[0][c]=this.g[this.rows-1][c]=true
-
-        //创建随机障碍物
-        for(let i=0;i<this.innerWallNum / 2;i++){
-            for(let j=0;j<1000;j++){
-                let r = parseInt(Math.random() * this.rows)
-                let c = parseInt(Math.random() * this.cols)
-                if (this.g[r][c]||this.g[this.rows -1 -r][this.cols -1 -c]) 
-                    continue
-                if(r==this.rows-2 && c==1 || r==1 && c==this.cols-2) 
-                    continue
-                this.g[r][c]=this.g[this.rows -1 -r][this.cols -1 -c]=true
-                break
-            }
-        }
-
-        const tempG=JSON.parse(JSON.stringify(this.g))
-        return this.checkGraphConnectivity(tempG,this.rows-2,1,1,this.cols-2)
-    }
-
     start(){
-        for (let i=0;i<1000;i++){
-            if(this.createWall())
-                break
-        }
+        this.g = this.store.state.pk.gameMap
         for(let r=0;r<this.rows;r++)
         {
             for(let c=0;c<this.cols;c++)

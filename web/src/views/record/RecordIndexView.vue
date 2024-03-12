@@ -1,6 +1,6 @@
 <template>
     <ContentView>
-        对局记录
+        注册
     </ContentView>
     </template>
         

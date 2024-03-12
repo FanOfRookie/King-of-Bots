@@ -14,7 +14,7 @@ export default{
 }
 </script>
 
-<style>
+<style scoped>
     div.playground{
         width: 60vw;
         height: 70vh;

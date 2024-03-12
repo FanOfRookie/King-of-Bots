@@ -17,7 +17,10 @@ public class CORSConfig implements Filter {
         String origin = request.getHeader("Origin");
         if(origin!=null) {
             response.setHeader("Access-Control-Allow-Origin", origin);
+            System.out.println(origin);
         }
+
+
 
         String headers = request.getHeader("Access-Control-Request-Headers");
         if(headers!=null) {
@@ -27,8 +30,9 @@ public class CORSConfig implements Filter {
 
         response.setHeader("Access-Control-Allow-Methods", "*");
         response.setHeader("Access-Control-Max-Age", "3600");
+//        response.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
         response.setHeader("Access-Control-Allow-Credentials", "true");
-
         chain.doFilter(request, response);
     }
 
