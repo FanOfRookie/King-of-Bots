@@ -82,27 +82,57 @@ export class GameMap extends AcGameObject{
     }
 
     addListeningEvents(){
-        this.ctx.canvas.focus()
-
-        const [snake0,snake1]=this.Snakes
-        this.ctx.canvas.addEventListener("keydown",e=>{
-            if(e.key=== 'w')
-                snake0.setDirection(0)
-            else if(e.key==='d')
-                snake0.setDirection(1)
-            else if(e.key==='s')
-                snake0.setDirection(2)
-            else if(e.key==='a')
-                snake0.setDirection(3)
-            else if(e.key=== 'ArrowUp')
-                snake1.setDirection(0)
-            else if(e.key==='ArrowRight')
-                snake1.setDirection(1)
-            else if(e.key==='ArrowDown')
-                snake1.setDirection(2)
-            else if(e.key==='ArrowLeft')
-                snake1.setDirection(3)
-        })
+        if(this.store.state.record.isRecord){
+            let k = 0
+            const a_steps = this.store.state.record.a_step
+            const b_steps = this.store.state.record.b_step
+            const [snake0, snake1] = this.Snakes
+            const loser = this.store.state.record.record_loser
+            //每一定间隔执行下一步
+            const interval_id = setInterval(()=>{
+                //处理最后一步
+                if( k >= a_steps.length - 1){
+                    if(loser === "all"){
+                        snake0.status = "die"
+                        snake1.status = "die"
+                        this.store.commit("updateLoser","all")
+                    }else if(loser ==="A"){
+                        snake0.status = "die"
+                        this.store.commit("updateLoser","A")
+                    }
+                    else if(loser ==="B"){
+                        snake1.status = "die"
+                        this.store.commit("updateLoser","B")
+                    }
+                    this.store.commit("updateIsRecord",false)
+                    this.store.commit("updateLoser","none")
+                    clearInterval(interval_id)
+                }else{
+                    console.log(parseInt(b_steps[k]))
+                    snake0.setDirection(parseInt(a_steps[k]))
+                    snake1.setDirection(parseInt(b_steps[k]))
+                }
+                k++
+            },350)
+        }else{
+            let d = -1
+            this.ctx.canvas.focus()
+            this.ctx.canvas.addEventListener("keydown",e=>{
+                if(e.key=== 'w')
+                    d = 0
+                else if(e.key==='d')
+                    d = 1
+                else if(e.key==='s')
+                    d = 2
+                else if(e.key==='a')
+                    d = 3
+                if(d >= 0)
+                    this.store.state.pk.socket.send(JSON.stringify({
+                        event: "move",
+                        direction: d,
+                }))
+            })
+        }
     }
 
     //形参为头部的下一个位置

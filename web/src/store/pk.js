@@ -11,6 +11,8 @@ export default ({
     b_id: 0,
     b_sx: 0,
     b_sy: 0,
+    gameObject:null,
+    loser:"none",
   },
   getters: {
   },
@@ -34,6 +36,12 @@ export default ({
       state.b_sx = GameInfo.b_sx
       state.b_sy = GameInfo.b_sy
   },
+    updateGameObject(state, gameObject){
+      state.gameObject = gameObject
+  },
+  updateLoser(state, loser){
+    state.loser = loser
+},
   },
   actions: {
   },

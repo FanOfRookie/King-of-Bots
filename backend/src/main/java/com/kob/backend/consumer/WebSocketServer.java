@@ -1,6 +1,7 @@
 package com.kob.backend.consumer;
 
 import com.alibaba.fastjson2.JSONObject;
+import com.kob.backend.mapper.RecordMapper;
 import com.kob.backend.mapper.UserMapper;
 import com.kob.backend.pojo.User;
 import com.kob.backend.utils.JWTToUserId;
@@ -30,7 +31,7 @@ public class WebSocketServer {
     ConcurrentHashMap代替同步的Map（Collections.synchronized(new HashMap()))，众所周知，HashMap是根据散列值分段存储的，同步Map在同步的时候锁住了所有的段，
     而ConcurrentHashMap加锁的时候根据散列值锁住了散列值锁对应的那段，因此提高了并发性能。
      */
-    final private static ConcurrentHashMap<Integer,WebSocketServer> users = new ConcurrentHashMap<>();
+    final public static ConcurrentHashMap<Integer,WebSocketServer> users = new ConcurrentHashMap<>();
 
     /*
     匹配池
@@ -44,14 +45,30 @@ public class WebSocketServer {
     private User user;
     private Session session;
 
+    public Game getGame() {
+        return game;
+    }
+
+    public void setGame(Game game) {
+        this.game = game;
+    }
+
+    private Game game = null;
 
     /*
     该server并不是springboot自带的，不能使用自动注入
      */
     private static UserMapper userMapper;
+
     @Autowired
     public void setUserMapper(UserMapper userMapper){
         WebSocketServer.userMapper = userMapper;
+    }
+
+    public static RecordMapper recordMapper;
+    @Autowired
+    public void setRecordMapper(RecordMapper recordMapper){
+        WebSocketServer.recordMapper = recordMapper;
     }
 
     @OnOpen
@@ -69,7 +86,6 @@ public class WebSocketServer {
             this.session.close();
         System.out.println(users);
     }
-
 
     @OnClose
     public void onClose() {
@@ -90,8 +106,15 @@ public class WebSocketServer {
             matchPool.remove(a);
             matchPool.remove(b);
 
-            Game game = new Game(13,14,40,a.getId(),b.getId());
+            //匹配成功，新建一个Game类，该类维护玩家对战、地图创建，使用新的线程来执行
+            Game game = new Game(13,14,30,a.getId(),b.getId());
             game.createMap();
+            //将game对象与user连接绑定
+            users.get(a.getId()).setGame(game);
+            users.get(b.getId()).setGame(game);
+            //执行game的线程run()
+            game.start();
+
             JSONObject respGame = new JSONObject();
             respGame.put("a_id",game.getPlayerA().getId());
             respGame.put("a_sx",game.getPlayerA().getSx());
@@ -123,16 +146,25 @@ public class WebSocketServer {
         matchPool.remove(this.user);
     }
 
+    private void move(Integer direction){
+        if(game.getPlayerA().getId() == user.getId())
+            game.setNextStepA(direction);
+        else if(game.getPlayerB().getId() == user.getId())
+            game.setNextStepB(direction);
+    }
+
     @OnMessage
     public void onMessage(String message, Session session) {
         // 从Client接收消息
-//        System.out.println("receive message");
         JSONObject data = JSONObject.parseObject(message);
+//        System.out.println(data.get("direction"));
         String event = data.getString("event");
         if(event.equals("start-matching"))
             startMatching();
         else if (event.equals("cancel-matching")) {
             cancelMatching();
+        } else if (event.equals("move")) {
+            move(data.getInteger("direction"));
         }
     }
 

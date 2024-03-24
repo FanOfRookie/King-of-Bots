@@ -2,8 +2,8 @@
     <playground v-if="$store.state.pk.status === 'playing'">
     </playground>
     <MatchGround v-if="$store.state.pk.status === 'matching' || $store.state.pk.status === 'success' ">
-
     </MatchGround>
+    <ResultBoard/>
 </template>
     
 <script>
@@ -12,10 +12,12 @@ import MatchGround from "@/components/MatchGround.vue"
 //当组件被挂载，执行onMounted，反之则onUnmounted
 import { onMounted,onUnmounted } from "vue"; 
 import { useStore } from "vuex";
+import ResultBoard from "@/components/ResultBoard.vue"
 export default{
     components:{
         playground,
         MatchGround,
+        ResultBoard
     },
     setup(){
         const store = useStore()
@@ -44,11 +46,33 @@ export default{
                 })
 
                 store.commit("updateGameInfo",data.gameInfo)
+                console.log(data.gameInfo.gameMap)
 
                 store.commit("updateStatus","success")
                 setTimeout(() => {
                     store.commit("updateStatus","playing")
                 }, 2000);
+                }else if(data.event === "move"){
+                    const game = store.state.pk.gameObject
+                    const [snake0,snake1] = game.Snakes
+                    snake0.setDirection(data.a_direction)
+                    snake1.setDirection(data.b_direction)
+                }else if(data.event === "result"){
+                    console.log(data)
+                    const game = store.state.pk.gameObject
+                    const [snake0,snake1] = game.Snakes
+                    if(data.loser === "all"){
+                        snake0.status = "die"
+                        snake1.status = "die"
+                        store.commit("updateLoser","all")
+                    }else if(data.loser ==="A"){
+                        snake0.status = "die"
+                        store.commit("updateLoser","A")
+                    }
+                    else if(data.loser ==="B"){
+                        snake1.status = "die"
+                        store.commit("updateLoser","B")
+                    }
                 }
             }
 
@@ -58,6 +82,7 @@ export default{
         })
 
         onUnmounted(()=>{
+            store.commit("updateLoser","none")
             socket.close()
             store.commit("updateStatus","matching")
         })
