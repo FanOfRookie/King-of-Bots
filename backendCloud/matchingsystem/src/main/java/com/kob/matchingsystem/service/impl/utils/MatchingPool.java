@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
-@Component
+ @Component
 public class MatchingPool extends Thread{
     private static List<Player> players = new ArrayList<>();
     private ReentrantLock lock = new ReentrantLock();

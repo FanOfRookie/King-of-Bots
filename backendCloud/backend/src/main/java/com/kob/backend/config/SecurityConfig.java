@@ -44,7 +44,8 @@ public class SecurityConfig {
                         .requestMatchers("/user/account/token/",
                                 "/user/account/register/",
                                 "/pk/start/game/",
-                                "/pk/receive/bot/move/").permitAll()
+                                "/pk/receive/bot/move/",
+                                "/test").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS).permitAll()
                         .anyRequest().authenticated());
 

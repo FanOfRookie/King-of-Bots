@@ -1,0 +1,6 @@
+2024-07-01 16:01:38 INFO  c.k.backend.aop.ControllerLogAspect - com.kob.backend.controller.test.testControllertest 请求入参: [] Query cost time(ms): 1002
+2024-07-01 16:01:53 INFO  c.k.backend.aop.ControllerLogAspect - com.kob.backend.controller.user.account.InfoControllergetInfo 请求入参: [] Query cost time(ms): 0
+2024-07-01 16:01:53 INFO  c.k.backend.aop.ControllerLogAspect - com.kob.backend.controller.user.bot.GetListControllergetBotList 请求入参: [] Query cost time(ms): 62
+2024-07-01 16:02:10 INFO  c.k.backend.aop.ControllerLogAspect - com.kob.backend.controller.user.account.LoginControllergetToken 请求入参: [{"username":"faker","password":"123456"}] Query cost time(ms): 159
+2024-07-01 16:02:10 INFO  c.k.backend.aop.ControllerLogAspect - com.kob.backend.controller.user.account.InfoControllergetInfo 请求入参: [] Query cost time(ms): 0
+2024-07-01 16:02:10 INFO  c.k.backend.aop.ControllerLogAspect - com.kob.backend.controller.user.bot.GetListControllergetBotList 请求入参: [] Query cost time(ms): 2

@@ -110,7 +110,6 @@ public class WebSocketServer {
     @OnClose
     public void onClose() {
         // 关闭链接
-        System.out.println("disconnected");
         if(this.user != null){
             if("matching".equals(userStatus.get(this.user.getId())))
                 this.cancelMatching();

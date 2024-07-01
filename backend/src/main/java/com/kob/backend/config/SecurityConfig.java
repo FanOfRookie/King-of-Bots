@@ -41,7 +41,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
                         //两个公开链接
-                        .requestMatchers("/user/account/token/", "/user/account/register/").permitAll()
+                        .requestMatchers("/user/account/token/", "/user/account/register/","/test").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS).permitAll()
                         .anyRequest().authenticated());
 

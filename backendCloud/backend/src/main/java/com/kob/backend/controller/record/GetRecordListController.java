@@ -3,6 +3,7 @@ package com.kob.backend.controller.record;
 import com.alibaba.fastjson2.JSONObject;
 import com.kob.backend.service.record.GetRecordListService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +18,8 @@ public class GetRecordListController {
     @Autowired
     private GetRecordListService getRecordListService;
 
+
+    @Qualifier
     @GetMapping("/record/getList/")
     private JSONObject getRecordList(@RequestParam Map<String,String> data){
         Integer userId = Integer.parseInt(data.get("userId"));
