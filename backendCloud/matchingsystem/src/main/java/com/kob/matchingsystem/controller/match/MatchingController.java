@@ -1,4 +1,4 @@
-package com.kob.matchingsystem.controller;
+package com.kob.matchingsystem.controller.match;
 
 import com.kob.matchingsystem.service.MatchingService;
 import org.springframework.beans.factory.annotation.Autowired;

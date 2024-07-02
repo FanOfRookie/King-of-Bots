@@ -1,4 +1,4 @@
-package com.kob.botrunningsystem.controller;
+package com.kob.botrunningsystem.controller.botrunning;
 
 import com.kob.botrunningsystem.service.BotRunningService;
 import org.springframework.beans.factory.annotation.Autowired;

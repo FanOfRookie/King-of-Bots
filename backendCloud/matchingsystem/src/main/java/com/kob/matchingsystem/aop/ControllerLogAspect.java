@@ -1,4 +1,4 @@
-package com.kob.backend.aop;
+package com.kob.matchingsystem.aop;
 
 import com.alibaba.fastjson2.JSONObject;
 import lombok.extern.slf4j.Slf4j;
@@ -9,8 +9,6 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
-
-import java.util.Objects;
 
 @Aspect
 @Component
@@ -23,7 +21,6 @@ public class ControllerLogAspect {
 
     @Around("pointcutMethod()")
     public Object logAround(ProceedingJoinPoint joinPoint) throws Throwable{
-//        MDC.put("requestID", Objects.toString(Thread.currentThread().getId() + System.currentTimeMillis()));
         //获取全名
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         StringBuilder info = new StringBuilder();

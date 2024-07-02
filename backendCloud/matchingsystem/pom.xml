@@ -37,6 +37,11 @@
             <version>1.18.30</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.kob</groupId>
+            <artifactId>common</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
     <properties>
         <maven.compiler.source>17</maven.compiler.source>

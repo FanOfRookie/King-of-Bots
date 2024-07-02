@@ -1,4 +1,4 @@
-package com.kob.backend.aop;
+package com.kob.log;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.filter.Filter;
@@ -7,10 +7,10 @@ import ch.qos.logback.core.spi.FilterReply;
 public class LogFilter extends Filter<ILoggingEvent> {
     @Override
     public FilterReply decide(ILoggingEvent iLoggingEvent) {
-        String path = ControllerLogAspect.class.getName();
-        if(iLoggingEvent.getLoggerName().equals(path))
+//        String path = ControllerLogAspect.class.getName();
+        if(iLoggingEvent.getLoggerName().contains("Controller"))
             return FilterReply.ACCEPT;
-        else
+//        else
             return FilterReply.DENY;
     }
 }

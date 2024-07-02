@@ -10,15 +10,15 @@
     <!-- 文件输出 -->
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
 
-        <filter class="com.kob.backend.aop.LogFilter"/>
+        <filter class="com.kob.log.LogFilter"/>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- 日志文件名模式 -->
-            <fileNamePattern>logs/controller-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>logs/controller/%d{yyyy-MM-dd}.log</fileNamePattern>
             <!-- 保留的历史日志文件最大数量 -->
             <maxHistory>30</maxHistory>
         </rollingPolicy>
         <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%X{requestID}] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
 
