@@ -27,7 +27,7 @@ public class ControllerLogAspect {
         //获取全名
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         StringBuilder info = new StringBuilder();
-        info.append(methodSignature.getDeclaringTypeName()).append(methodSignature.getName());
+        info.append(methodSignature.getDeclaringTypeName()).append('#').append(methodSignature.getName());
         Object[] args = joinPoint.getArgs();
         info.append(" 请求入参: ").append(toJSONString(args));
         long start = System.currentTimeMillis();

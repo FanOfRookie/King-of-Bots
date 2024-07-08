@@ -5,12 +5,9 @@ import ch.qos.logback.core.filter.Filter;
 import ch.qos.logback.core.spi.FilterReply;
 
 public class LogFilter extends Filter<ILoggingEvent> {
+
     @Override
     public FilterReply decide(ILoggingEvent iLoggingEvent) {
-//        String path = ControllerLogAspect.class.getName();
-        if(iLoggingEvent.getLoggerName().contains("Controller"))
-            return FilterReply.ACCEPT;
-//        else
-            return FilterReply.DENY;
+        return iLoggingEvent.getLoggerName().contains("Controller") ? FilterReply.ACCEPT : FilterReply.DENY;
     }
 }
