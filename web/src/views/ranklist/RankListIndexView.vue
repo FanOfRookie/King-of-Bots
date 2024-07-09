@@ -94,7 +94,8 @@ export default{
             type:"get",
             data:{
                 page,
-                pageSize:10
+                pageSize:10,
+                userId: store.state.user.id
             },
             headers:{
                 Authorization: "Bearer " + store.state.user.token

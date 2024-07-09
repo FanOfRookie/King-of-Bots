@@ -20,6 +20,7 @@ public class GetRankListController {
     public JSONObject getRankList(@RequestParam Map<String,String> data){
         Integer page = Integer.parseInt(data.get("page"));
         Integer pageSize = Integer.parseInt(data.getOrDefault("pageSize","10"));
-        return getRankListService.getRankList(page,pageSize);
+        Integer userId = Integer.parseInt(data.get("userId"));
+        return getRankListService.getRankList(page,pageSize,userId);
     }
 }

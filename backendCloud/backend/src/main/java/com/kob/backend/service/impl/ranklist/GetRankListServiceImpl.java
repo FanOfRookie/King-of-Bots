@@ -15,6 +15,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
+import java.net.ConnectException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,9 +36,26 @@ public class GetRankListServiceImpl implements GetRankListService {
     private final Integer RANK_LIST_CACHE_TIMEOUT = 60;
 
     @Override
-    public JSONObject getRankList(Integer page,Integer pageSize) {
+    public JSONObject getRankList(Integer page,Integer pageSize, Integer userId) {
         JSONObject resp = new JSONObject();
-        List<User> users = getFromCache(page);
+        List<User> users = null;
+
+        String distributeLock = RANK_LIST_CACHE_KEY + userId;
+        Boolean lock = redisTemplate.opsForValue().setIfAbsent(distributeLock,userId,10,TimeUnit.SECONDS);
+        if(lock == null || !lock) {
+            log.info("compete query");
+            return null;
+        }
+        try {
+            users = getFromCache(page);
+        }catch (Exception e){
+            log.error(e + "# Redis Cache Server Disconnect!");
+        }finally {
+            if(Objects.equals(redisTemplate.opsForValue().get(distributeLock), userId))
+                redisTemplate.delete(distributeLock);
+            else
+                System.out.println("transaction is not finished!");
+        }
 
         if(users == null)
             users = getFromDB(page,pageSize);
@@ -71,10 +89,6 @@ public class GetRankListServiceImpl implements GetRankListService {
     private List<User> getFromCache(Integer page){
         log.info("query cache");
         Map<String, List<User>> cachedRankList = (Map<String, List<User>>) redisTemplate.opsForValue().get(RANK_LIST_CACHE_KEY);
-        if(cachedRankList == null)
-            return null;
-        else {
-            return cachedRankList.get(page.toString());
-        }
+        return cachedRankList == null ? null : cachedRankList.get(page.toString());
     }
 }
